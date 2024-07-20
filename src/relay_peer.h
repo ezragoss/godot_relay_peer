@@ -6,6 +6,8 @@
 #include <godot_cpp/classes/web_socket_peer.hpp>
 #include <godot_cpp/variant/string.hpp>
 
+#include <memory>
+
 namespace godot {
 
     /// Manages connections to and from a lightweight relay
