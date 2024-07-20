@@ -2,7 +2,7 @@ name: 🛠️ Builds
 on:
   push:
     tags:
-      - 'v.*.*.*'
+      - 'v*.*.*'
   pull_request:
   workflow_dispatch:
 
