@@ -125,4 +125,4 @@ jobs:
           files: |
             ${{ github.workspace }}/demo/
         env:
-          GH_TOKEN: ${{ secrets.relay_release }}
+          GH_TOKEN: ${{ secrets.RELEASE_SECRET }}
