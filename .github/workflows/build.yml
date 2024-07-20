@@ -1,6 +1,8 @@
 name: 🛠️ Builds
 on:
   push:
+    tags:
+      - 'v*'
   pull_request:
   workflow_dispatch:
 
@@ -120,5 +122,5 @@ jobs:
       - name: GH Release
         uses: softprops/action-gh-release@v2.0.8
         with:
-          file: |
+          files: |
             ${{ github.workspace }}/demo/
