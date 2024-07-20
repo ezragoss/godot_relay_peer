@@ -1,4 +1,0 @@
-C:/Users/Ezra/Projects/godot_relay_peer/cmake-build-debug/CMakeFiles/gdext-relay_peer_EXTRAS.dir
-C:/Users/Ezra/Projects/godot_relay_peer/cmake-build-debug/CMakeFiles/gdext-relay_peer.dir
-C:/Users/Ezra/Projects/godot_relay_peer/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Ezra/Projects/godot_relay_peer/cmake-build-debug/CMakeFiles/rebuild_cache.dir

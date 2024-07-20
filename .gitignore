@@ -1,2 +1,3 @@
 *.os
 cmake-build-*
+.idea
