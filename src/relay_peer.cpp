@@ -1,9 +1,12 @@
 #include "relay_peer.h"
 
+#define RES_ID_CONNECTION_MSG 0
+#define RES_ID_RELAY_MSG 1
+
 using namespace godot;
 
 WebSocketRelayPeer::WebSocketRelayPeer() {
-    WebSocketRelayPeer::_socket = std::make_unique<WebSocketPeer>();
+    WebSocketRelayPeer::m_socket = std::make_unique<WebSocketPeer>();
 }
 WebSocketRelayPeer::~WebSocketRelayPeer() {}
 
@@ -13,13 +16,15 @@ void WebSocketRelayPeer::_bind_methods() {
 }
 
 Error WebSocketRelayPeer::_get_packet(const uint8_t **r_buffer, int32_t *r_buffer_size) {
-    PackedByteArray data = WebSocketRelayPeer::_socket->get_packet();
-    *r_buffer_size = data.size();
-    *r_buffer = data.ptr();
+    if (m_incoming_packets.empty()) {
+        return;
+    }
 
-    // TODO: We want to prepend the buffer with the peer integer
+    Packet packet = m_incoming_packets.pop();
+    *r_buffer_size = packet.data.size();
+    *r_buffer = packet.data.ptr();
 
-    return _socket->get_packet_error();
+    return
 }
 
 
@@ -28,15 +33,15 @@ Error WebSocketRelayPeer::_put_packet(const uint8_t *p_buffer, int32_t p_buffer_
     for (int32_t i = 0; i < p_buffer_size; i++) {
         buffer.append(p_buffer[i]);
     }
-    return _socket->put_packet(buffer);
+    return m_socket->put_packet(buffer);
 }
 
 int32_t WebSocketRelayPeer::_get_available_packet_count() const {
-    return _socket->get_available_packet_count();
+    return m_socket->get_available_packet_count();
 }
 
 int32_t WebSocketRelayPeer::_get_max_packet_size() const {
-    return _socket->get_encode_buffer_max_size();
+    return m_socket->get_encode_buffer_max_size();
 }
 
 int32_t WebSocketRelayPeer::_get_packet_channel() const {
@@ -64,11 +69,11 @@ MultiplayerPeer::TransferMode WebSocketRelayPeer::_get_transfer_mode() const {
 }
 
 void WebSocketRelayPeer::_set_target_peer(int32_t p_peer) {
-    _packet_peer = p_peer;
+    m_packet_peer = p_peer;
 }
 
 int32_t WebSocketRelayPeer::_get_packet_peer() const {
-    return _packet_peer;
+    return m_packet_peer;
 }
 
 bool WebSocketRelayPeer::_is_server() const {
@@ -76,11 +81,22 @@ bool WebSocketRelayPeer::_is_server() const {
 }
 
 void WebSocketRelayPeer::_poll() {
-    _socket->poll();
+    m_socket->poll();
+    WebSocketPeer::State state = m_socket->get_ready_state();
+    switch (state) {
+        case WebSocketPeer::State::STATE_OPEN:
+            PackedByteArray data = m_socket->get_packet();
+            process_message(data);
+            return;
+        case WebSocketPeer::State::STATE_CLOSED:
+        case WebSocketPeer::State::STATE_CLOSING:
+        case WebSocketPeer::State::STATE_CONNECTING:
+        default:
+    }
 }
 
 void WebSocketRelayPeer::_close() {
-    _socket->close();
+    m_socket->close();
 }
 
 void WebSocketRelayPeer::_disconnect_peer(int32_t p_peer, bool p_force) {
@@ -92,11 +108,11 @@ int32_t WebSocketRelayPeer::_get_unique_id() const {
 }
 
 void WebSocketRelayPeer::_set_refuse_new_connections(bool p_enable) {
-    _is_refusing_connections = p_enable;
+    m_is_refusing_connections = p_enable;
 }
 
 bool WebSocketRelayPeer::_is_refusing_new_connections() const {
-    return _is_refusing_connections;
+    return m_is_refusing_connections;
 }
 
 bool WebSocketRelayPeer::_is_server_relay_supported() const {
@@ -104,7 +120,7 @@ bool WebSocketRelayPeer::_is_server_relay_supported() const {
 }
 
 MultiplayerPeer::ConnectionStatus WebSocketRelayPeer::_get_connection_status() const {
-    WebSocketPeer::State state = _socket->get_ready_state();
+    WebSocketPeer::State state = m_socket->get_ready_state();
     switch (state) {
         case WebSocketPeer::State::STATE_CONNECTING:
             return MultiplayerPeer::ConnectionStatus::CONNECTION_CONNECTING;
@@ -118,9 +134,9 @@ MultiplayerPeer::ConnectionStatus WebSocketRelayPeer::_get_connection_status() c
 }
 
 Error WebSocketRelayPeer::create_client(const String &p_url, const Ref<TLSOptions> &p_tls_client_options) {
-    return _socket->connect_to_url(p_url, p_tls_client_options);
+    return m_socket->connect_to_url(p_url, p_tls_client_options);
 }
 
 Error WebSocketRelayPeer::create_host(const String &p_url, const Ref<TLSOptions> &p_tls_client_options) {
-    return _socket->connect_to_url(p_url, p_tls_client_options);
+    return m_socket->connect_to_url(p_url, p_tls_client_options);
 }

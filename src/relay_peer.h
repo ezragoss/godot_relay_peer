@@ -1,12 +1,15 @@
 #ifndef SRC_RELAY_PEER_H
 #define SRC_RELAY_PEER_H
 
+#include <memory>
+#include <queue>
+
 #include <godot_cpp/classes/multiplayer_peer_extension.hpp>
 #include <godot_cpp/classes/multiplayer_peer.hpp>
 #include <godot_cpp/classes/web_socket_peer.hpp>
 #include <godot_cpp/variant/string.hpp>
 
-#include <memory>
+#include "packet.h"
 
 namespace godot {
 
@@ -15,10 +18,19 @@ namespace godot {
         GDCLASS(WebSocketRelayPeer, MultiplayerPeerExtension)
 
     private:
-        std::unique_ptr<WebSocketPeer> _socket;
-        bool _is_refusing_connections = false;
-        int32_t _packet_peer = MultiplayerPeer::TARGET_PEER_BROADCAST;
+        /// The websocket we communicate through
+        std::unique_ptr<WebSocketPeer> m_socket;
+
+        ///  Set of state variables
         bool m_is_server = false;
+        bool m_is_refusing_connections = false;
+        int32_t m_packet_peer = MultiplayerPeer::TARGET_PEER_BROADCAST;
+
+        /// Collection buffer for packets passed out of the class
+        std::queue<Packet> m_incoming_packets;
+
+        /// Process notifications and pass relayed packets to the packet buffer
+        void process_message(PackedByteArray message);
 
     public:
         // Overrides
@@ -26,8 +38,6 @@ namespace godot {
         Error _put_packet(const uint8_t *p_buffer, int32_t p_buffer_size) override;
         int32_t _get_available_packet_count() const override;
         int32_t _get_max_packet_size() const override;
-//        PackedByteArray _get_packet_script() override;
-//        Error _put_packet_script(const PackedByteArray &p_buffer) override;
         int32_t _get_packet_channel() const override;
         MultiplayerPeer::TransferMode _get_packet_mode() const override;
         void _set_transfer_channel(int32_t p_channel) override;
@@ -53,7 +63,10 @@ namespace godot {
         WebSocketRelayPeer();
         ~WebSocketRelayPeer();
 
+        /// Create a client connection with the server
         Error create_client(const String &p_url, const Ref<TLSOptions> &p_tls_client_options = nullptr);
+
+        /// Create a host connection with the server
         Error create_host(const String &p_url, const Ref<TLSOptions> &p_tls_client_options = nullptr);
     };
 
