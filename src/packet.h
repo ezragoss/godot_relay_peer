@@ -7,8 +7,8 @@ using namespace godot;
 
 /// Our packet protocol
 class Packet : RefCounted {
-private:
-    *uint8_t m_data;
+public:
+    PackedByteArray m_data;
 };
 
 #endif //RELAY_GODOT_MULTIPLAYER_PACKET_H

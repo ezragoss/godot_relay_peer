@@ -1,0 +1,434 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjubogavgke31"]
+
+[ext_resource type="Script" path="res://scripts/test.gd" id="1_0rt3q"]
+
+[node name="Root" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_0rt3q")
+
+[node name="BackgroundColor" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.384904, 0.388009, 0.409387, 1)
+
+[node name="MatchList" type="ItemList" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.023
+anchor_top = 0.218
+anchor_right = 0.21
+anchor_bottom = 0.819
+offset_left = 0.503998
+offset_top = -0.264008
+offset_right = 0.0799866
+offset_bottom = 0.287964
+
+[node name="ConnectedPeersList" type="ItemList" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.493
+anchor_top = 0.222
+anchor_right = 0.68
+anchor_bottom = 0.819
+offset_left = 0.0639648
+offset_top = 0.143982
+offset_right = -0.359985
+offset_bottom = 3.28796
+
+[node name="MatchLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.024
+anchor_top = 0.177
+anchor_right = 0.146
+anchor_bottom = 0.213
+offset_left = 0.351999
+offset_top = 0.304001
+offset_right = -0.192017
+offset_bottom = -0.0240021
+text = "Available Matches"
+
+[node name="ConnectedPeersLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.181
+anchor_right = 0.618
+anchor_bottom = 0.213
+offset_left = -4.0
+offset_top = -0.28801
+offset_right = 0.0639648
+offset_bottom = 1.976
+text = "Connected Peers"
+
+[node name="GameNameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.852
+anchor_top = 0.035
+anchor_right = 0.941
+anchor_bottom = 0.071
+offset_left = -0.504089
+offset_top = 0.32
+offset_right = -0.0321045
+offset_bottom = -0.00800323
+grow_horizontal = 0
+text = "Game Name"
+
+[node name="UsernameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.865
+anchor_top = 0.792
+anchor_right = 0.954
+anchor_bottom = 0.827
+offset_left = -0.480103
+offset_top = -0.216064
+offset_right = -0.00805664
+offset_bottom = 0.104004
+grow_horizontal = 0
+text = "Username"
+
+[node name="IncrementHost" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.366
+anchor_top = 0.219
+anchor_right = 0.457
+anchor_bottom = 0.255
+offset_left = 0.367981
+offset_top = 0.0879974
+offset_right = -0.463989
+offset_bottom = -0.240021
+text = "Broadcast Ctr"
+
+[node name="IncrementAll" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.235
+anchor_top = 0.219
+anchor_right = 0.352
+anchor_bottom = 0.255
+offset_left = 0.279968
+offset_top = 0.0879974
+offset_right = -0.504028
+offset_bottom = -0.240021
+grow_horizontal = 0
+text = "Server Ctr"
+
+[node name="IsHost" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.025
+anchor_right = 0.116
+anchor_bottom = 0.06
+offset_left = -0.560001
+offset_top = -0.200001
+offset_right = 0.367996
+offset_bottom = 0.119991
+text = "Is Not Host"
+
+[node name="IsInMatch" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.066
+anchor_right = 0.132
+anchor_bottom = 0.102
+offset_left = -0.560001
+offset_top = 0.231998
+offset_right = -18.064
+offset_bottom = -0.0960083
+text = "Is Not In Match"
+
+[node name="ConnectedLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.475
+anchor_top = 0.022
+anchor_right = 0.577
+anchor_bottom = 0.057
+offset_left = -0.200012
+offset_top = -0.256001
+offset_right = 0.295959
+offset_bottom = 0.0639992
+grow_horizontal = 2
+text = "Not Connected"
+horizontal_alignment = 1
+
+[node name="MyCounter" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.234
+anchor_top = 0.42
+anchor_right = 0.351
+anchor_bottom = 0.455
+offset_left = 0.431976
+offset_top = -0.160004
+offset_right = -0.35202
+offset_bottom = 0.160004
+grow_horizontal = 0
+text = "My Counter"
+
+[node name="IncrementHostCtr" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.238
+anchor_top = 0.264
+anchor_right = 0.35
+anchor_bottom = 0.299
+offset_left = -0.175995
+offset_top = -0.0720062
+offset_right = -0.200012
+offset_bottom = 0.247986
+grow_horizontal = 0
+text = "0
+"
+
+[node name="MyCtr" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.237
+anchor_top = 0.477
+anchor_right = 0.349
+anchor_bottom = 0.512
+offset_left = -0.0240173
+offset_top = -0.0960083
+offset_right = -0.0480042
+offset_bottom = 0.223999
+grow_horizontal = 0
+text = "0
+"
+
+[node name="IncrementAllCtr" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.364
+anchor_top = 0.264
+anchor_right = 0.476
+anchor_bottom = 0.299
+offset_left = -0.328033
+offset_top = -0.0720062
+offset_right = -0.35199
+offset_bottom = 0.247986
+grow_horizontal = 0
+text = "0
+"
+
+[node name="Refresh" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.024
+anchor_top = 0.826
+anchor_right = 0.095
+anchor_bottom = 0.873
+offset_left = 0.351999
+offset_top = -0.248047
+offset_right = -0.44001
+offset_bottom = 0.295959
+text = "Refresh"
+
+[node name="LeaveCurrent" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.895
+anchor_right = 0.127
+anchor_bottom = 0.943
+offset_left = 0.199999
+offset_top = 0.039978
+offset_right = -36.304
+offset_bottom = -0.0640259
+text = "Leave Current"
+
+[node name="Join" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.14
+anchor_top = 0.826
+anchor_right = 0.21
+anchor_bottom = 0.873
+offset_left = -0.279999
+offset_top = -0.248047
+offset_right = 0.0799866
+offset_bottom = 0.295959
+text = "Join"
+
+[node name="Host" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.867
+anchor_top = 0.148
+anchor_right = 0.937
+anchor_bottom = 0.196
+offset_left = 0.215942
+offset_top = 0.0960007
+offset_right = 0.575928
+offset_bottom = -0.00800323
+text = "Host
+"
+
+[node name="UpdateGameDataBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.786
+anchor_top = 0.148
+anchor_right = 0.856
+anchor_bottom = 0.196
+offset_left = -0.472046
+offset_top = 0.0960007
+offset_right = -0.112061
+offset_bottom = -0.00800323
+text = "Update"
+
+[node name="ConnectBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.491
+anchor_top = 0.063
+anchor_right = 0.562
+anchor_bottom = 0.111
+offset_left = 0.367981
+offset_top = 0.175999
+offset_right = -0.424133
+offset_bottom = 0.071991
+grow_horizontal = 2
+text = "Connect"
+
+[node name="IncrementServerBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.24
+anchor_top = 0.327
+anchor_right = 0.31
+anchor_bottom = 0.375
+offset_left = -0.480011
+offset_top = 0.103989
+offset_right = -0.119995
+offset_bottom = -1.52588e-05
+text = "+1"
+
+[node name="IncrementMyCtrBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.237
+anchor_top = 0.525
+anchor_right = 0.31
+anchor_bottom = 0.573
+offset_left = -0.0240173
+offset_top = -0.200012
+offset_right = -3.12
+offset_bottom = -0.304016
+text = "+1"
+
+[node name="IncrementPeerBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.494
+anchor_top = 0.843
+anchor_right = 0.564
+anchor_bottom = 0.89
+offset_left = -0.0880127
+offset_top = -0.264038
+offset_right = 0.271973
+offset_bottom = 0.279968
+text = "+1"
+
+[node name="IncrementClientBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.367
+anchor_top = 0.324
+anchor_right = 0.444
+anchor_bottom = 0.372
+offset_left = 0.215973
+offset_top = 0.0480042
+offset_right = -7.48804
+offset_bottom = -0.0559998
+text = "+1"
+
+[node name="UpdatePlayerDataBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.867
+anchor_top = 0.895
+anchor_right = 0.937
+anchor_bottom = 0.943
+offset_left = -0.784058
+offset_top = 0.039978
+offset_right = -0.424072
+offset_bottom = -0.0640259
+text = "Update"
+
+[node name="GameName" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.778
+anchor_top = 0.082
+anchor_right = 0.937
+anchor_bottom = 0.13
+offset_left = -0.256042
+offset_top = -0.136002
+offset_right = -0.424072
+offset_bottom = -0.240005
+
+[node name="Username" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.778
+anchor_top = 0.836
+anchor_right = 0.937
+anchor_bottom = 0.884
+offset_left = 0.743958
+offset_top = 0.271973
+offset_right = 0.575928
+offset_bottom = 0.167969
+
+[connection signal="pressed" from="Refresh" to="." method="refresh_matches"]
+[connection signal="pressed" from="LeaveCurrent" to="." method="_leave_game"]
+[connection signal="pressed" from="Join" to="." method="_join_game"]
+[connection signal="pressed" from="Host" to="." method="_host_game"]
+[connection signal="pressed" from="ConnectBtn" to="." method="_connect_to_server"]
+[connection signal="pressed" from="IncrementServerBtn" to="." method="_increment_host_ctr"]
+[connection signal="pressed" from="IncrementClientBtn" to="." method="increment_broadcast_ctr"]

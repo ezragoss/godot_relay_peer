@@ -2,6 +2,7 @@
 #define SRC_RELAY_PEER_H
 
 #include <memory>
+#include <unordered_map>
 #include <queue>
 
 #include <godot_cpp/classes/multiplayer_peer_extension.hpp>
@@ -9,7 +10,7 @@
 #include <godot_cpp/classes/web_socket_peer.hpp>
 #include <godot_cpp/variant/string.hpp>
 
-#include "packet.h"
+#include <packet.h>
 
 namespace godot {
 
@@ -31,6 +32,8 @@ namespace godot {
 
         /// Process notifications and pass relayed packets to the packet buffer
         void process_message(PackedByteArray message);
+
+        std::unordered_map<int, int> peerIDByNetworkID;
 
     public:
         // Overrides
@@ -64,10 +67,15 @@ namespace godot {
         ~WebSocketRelayPeer();
 
         /// Create a client connection with the server
-        Error create_client(const String &p_url, const Ref<TLSOptions> &p_tls_client_options = nullptr);
+        Error join_match(String match_id);
 
         /// Create a host connection with the server
-        Error create_host(const String &p_url, const Ref<TLSOptions> &p_tls_client_options = nullptr);
+        Error host_match(String name);
+
+        /// Connection to the relay server itself
+        Error connect_to_relay(const String &p_url, const Ref<TLSOptions> &p_tls_client_options = nullptr);
+
+        Error refresh_match_list();
     };
 
 }
