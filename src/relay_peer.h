@@ -9,6 +9,7 @@
 #include <godot_cpp/classes/multiplayer_peer.hpp>
 #include <godot_cpp/classes/web_socket_peer.hpp>
 #include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/array.hpp>
 
 #include <packet.h>
 
@@ -26,6 +27,7 @@ namespace godot {
         bool m_is_server = false;
         bool m_is_refusing_connections = false;
         int32_t m_packet_peer = MultiplayerPeer::TARGET_PEER_BROADCAST;
+        int32_t m_target_peer = MultiplayerPeer::TARGET_PEER_BROADCAST;
 
         /// Collection buffer for packets passed out of the class
         std::queue<Packet> m_incoming_packets;
@@ -33,7 +35,7 @@ namespace godot {
         /// Process notifications and pass relayed packets to the packet buffer
         void process_message(PackedByteArray message);
 
-        std::unordered_map<int, int> peerIDByNetworkID;
+        std::unordered_map<int32_t, Variant> clientDescByPeerID;
 
     public:
         // Overrides
@@ -67,7 +69,7 @@ namespace godot {
         ~WebSocketRelayPeer();
 
         /// Create a client connection with the server
-        Error join_match(String match_id);
+        Error join_match(PackedByteArray match_id);
 
         /// Create a host connection with the server
         Error host_match(String name);
@@ -76,6 +78,9 @@ namespace godot {
         Error connect_to_relay(const String &p_url, const Ref<TLSOptions> &p_tls_client_options = nullptr);
 
         Error refresh_match_list();
+
+        Variant get_client_desc(int32_t peer_id);
+        Array peers();
     };
 
 }

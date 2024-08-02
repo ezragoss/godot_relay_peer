@@ -431,4 +431,5 @@ offset_bottom = 0.167969
 [connection signal="pressed" from="Host" to="." method="_host_game"]
 [connection signal="pressed" from="ConnectBtn" to="." method="_connect_to_server"]
 [connection signal="pressed" from="IncrementServerBtn" to="." method="_increment_host_ctr"]
+[connection signal="pressed" from="IncrementPeerBtn" to="." method="increment_peer_ctr"]
 [connection signal="pressed" from="IncrementClientBtn" to="." method="increment_broadcast_ctr"]

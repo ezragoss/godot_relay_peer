@@ -8,7 +8,9 @@ const CLIENT_COLOR = "2b4598"
 const BASE_COLOR = "626368"
 
 var peer := WebSocketRelayPeer.new()
-var new_peer = WebSocketPeer.new()
+var connected_peers_list: Array;
+
+var network_id = null
 
 var match_list: Array = []:
 	set(new):
@@ -52,14 +54,26 @@ var _is_connected := false:
 
 func _handle_match_list_refreshed(list: Array):
 	match_list = list
+	
+func _handle_peer_connected(peer_id: int):
+	print("Connected %s" % peer.get_client_desc(peer_id))
+	var description = peer.get_client_desc(peer_id)
+	if description["uuid"] == network_id:
+		return
+	ConnectedPeersList.add_item(description["username"])
+	connected_peers_list.append(peer_id)
+	
+func _handle_connection_confirmed(network_id: String):
+	_is_connected = true
+	self.network_id = network_id
+	
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.get_window().title = "%s" % randf_range(0, 1000)
 	peer.match_list_refreshed.connect(_handle_match_list_refreshed)
-	#multiplayer.multiplayer_peer = peer
-	
-
+	peer.peer_connected.connect(_handle_peer_connected)
+	peer.connection_confirmed.connect(_handle_connection_confirmed)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -74,6 +88,16 @@ func _host_game():
 	peer.host_match(current_name)
 	
 func _join_game():
+	var selected = MatchList.get_selected_items()
+	if not selected:
+		print("No match selected")
+		return
+		
+	var index = selected[0]
+	var data = match_list[index]
+	
+	peer.join_match(Marshalls.base64_to_raw(data["guid"]))
+	
 	BackgroundColor.color = CLIENT_COLOR
 	IsHost.text = "Is Client"
 	IsInMatch.text = "Is In Match"
@@ -85,13 +109,14 @@ func _leave_game():
 	IsInMatch.text = "Not In Match"
 
 func _connect_to_server():
-	_is_connected = true
 	var formatted = "ws://%s" % URL
 	print("Connecting to %s" % formatted)
-	#var err = new_peer.connect_to_url(formatted)
 	var err = peer.connect_to_relay(URL, null)
 	if err:
 		print(err)
+		return
+		
+	multiplayer.multiplayer_peer = peer
 
 @rpc("any_peer", "call_local", "reliable")
 func _increment_host_ctr():
@@ -112,9 +137,10 @@ func increment_peer_ctr():
 	var selected : Array = ConnectedPeersList.get_selected_items()
 	if not selected:
 		return
-		
+	
 	for select in selected:
-		_increment_peer_ctr.rpc(select)
+		var peer_id = connected_peers_list[select]
+		_increment_peer_ctr.rpc_id(peer_id)
 	
 @rpc("any_peer", "call_local", "reliable")
 func _increment_broadcast_ctr():
