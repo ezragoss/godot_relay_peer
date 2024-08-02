@@ -12,6 +12,8 @@ var connected_peers_list: Array;
 
 var network_id = null
 
+var session_uid = null
+
 var match_list: Array = []:
 	set(new):
 		match_list = new
@@ -70,7 +72,9 @@ func _handle_connection_confirmed(network_id: String):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.get_window().title = "%s" % randf_range(0, 1000)
+	session_uid = "%s" % randi_range(0, 1000)
+	
+	self.get_window().title = session_uid
 	peer.match_list_refreshed.connect(_handle_match_list_refreshed)
 	peer.peer_connected.connect(_handle_peer_connected)
 	peer.connection_confirmed.connect(_handle_connection_confirmed)
