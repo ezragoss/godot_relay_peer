@@ -81,7 +81,8 @@ Error WebSocketRelayPeer::_put_packet(const uint8_t *p_buffer, int32_t p_buffer_
     // Append the peer id data to the prefix
     int32_t peerId = m_target_peer;
     String networkPeerId = clientDescByPeerID[peerId].get("uuid");
-    const char* peerIdBytes = networkPeerId.ascii().ptr();
+    CharString peerIdAscii = networkPeerId.ascii();
+    const char* peerIdBytes = peerIdAscii.ptr();
 
     for (int8_t i = 0; i < 24; i++) {
         // We are putting all 24 bytes of the peer ID
@@ -195,6 +196,7 @@ void WebSocketRelayPeer::process_message(PackedByteArray message) {
     }
     else if (classifyingByte == RES_ID_PEER_CONNECTED) {
         PackedByteArray client_desc = message.slice(1);
+        auto data = client_desc.get_string_from_ascii();
         int32_t peer_id = generate_unique_id();
         clientDescByPeerID[peer_id] = JSON::parse_string(client_desc.get_string_from_ascii());
         emit_signal("peer_connected", peer_id);
