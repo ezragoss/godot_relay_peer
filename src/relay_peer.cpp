@@ -196,7 +196,6 @@ void WebSocketRelayPeer::process_message(PackedByteArray message) {
     }
     else if (classifyingByte == RES_ID_PEER_CONNECTED) {
         PackedByteArray client_desc = message.slice(1);
-        auto data = client_desc.get_string_from_ascii();
         int32_t peer_id = generate_unique_id();
         clientDescByPeerID[peer_id] = JSON::parse_string(client_desc.get_string_from_ascii());
         emit_signal("peer_connected", peer_id);
