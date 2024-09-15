@@ -1,3 +1,6 @@
 *.os
 cmake-build-*
 .idea
+.vs
+out/build
+demo/addons

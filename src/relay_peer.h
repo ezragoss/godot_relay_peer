@@ -11,7 +11,7 @@
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/array.hpp>
 
-#include <packet.h>
+#include "packet.h"
 
 namespace godot {
 
@@ -21,7 +21,7 @@ namespace godot {
 
     private:
         /// The websocket we communicate through
-        std::unique_ptr<WebSocketPeer> m_socket;
+        WebSocketPeer* m_socket;
 
         ///  Set of state variables
         bool m_is_server = false;
@@ -30,16 +30,16 @@ namespace godot {
         int32_t m_target_peer = MultiplayerPeer::TARGET_PEER_BROADCAST;
 
         /// Collection buffer for packets passed out of the class
-        std::queue<Packet> m_incoming_packets;
+        std::queue<Packet*> m_incoming_packets;
 
         /// Process notifications and pass relayed packets to the packet buffer
-        void process_message(PackedByteArray message);
+        void process_message(PackedByteArray& message);
 
         std::unordered_map<int32_t, Variant> clientDescByPeerID;
 
     public:
         // Overrides
-        Error _get_packet(const uint8_t **r_buffer, int32_t *r_buffer_size) override;
+        Error _get_packet(const uint8_t **r_buffer, int32_t* _buffer_size) override;
         Error _put_packet(const uint8_t *p_buffer, int32_t p_buffer_size) override;
         int32_t _get_available_packet_count() const override;
         int32_t _get_max_packet_size() const override;

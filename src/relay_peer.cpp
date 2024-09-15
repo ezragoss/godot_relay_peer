@@ -22,9 +22,12 @@
 using namespace godot;
 
 WebSocketRelayPeer::WebSocketRelayPeer() {
-    WebSocketRelayPeer::m_socket = std::make_unique<WebSocketPeer>();
+    WebSocketRelayPeer::m_socket = memnew(WebSocketPeer);
 }
-WebSocketRelayPeer::~WebSocketRelayPeer() {}
+
+WebSocketRelayPeer::~WebSocketRelayPeer() {
+    memdelete<WebSocketPeer>(m_socket);
+}
 
 void WebSocketRelayPeer::_bind_methods() {
     ClassDB::bind_method(D_METHOD("join_match", "match_id"), &WebSocketRelayPeer::join_match);
@@ -48,8 +51,8 @@ Error WebSocketRelayPeer::_get_packet(const uint8_t **r_buffer, int32_t *r_buffe
         return Error::OK;
     }
 
-    Packet packet = m_incoming_packets.front();
-    String sender_id = packet.m_data.slice(0, 24).get_string_from_ascii();
+    Packet* packet = m_incoming_packets.front();
+    String sender_id = packet->m_data.slice(0, 24).get_string_from_ascii();
 
     // Using the prefix, assign the packet peer
     for (auto pair : clientDescByPeerID) {
@@ -58,9 +61,9 @@ Error WebSocketRelayPeer::_get_packet(const uint8_t **r_buffer, int32_t *r_buffe
             m_packet_peer = pair.first;
     }
 
-    PackedByteArray payload = packet.m_data.slice(24);
+    PackedByteArray payload = packet->m_data.slice(24);
 
-    *r_buffer_size = payload.size();
+    *r_buffer_size = static_cast<int32_t>(payload.size());
     *r_buffer = payload.ptr();
     uint8_t *vbuffer = payload.ptrw();
     uint8_t packet_type = vbuffer[0] & 0b00001111;
@@ -69,6 +72,8 @@ Error WebSocketRelayPeer::_get_packet(const uint8_t **r_buffer, int32_t *r_buffe
     UtilityFunctions::print(cbuffer);
 
     m_incoming_packets.pop();
+
+    memdelete<Packet>(packet);
 
     return Error::OK;
 }
@@ -147,23 +152,22 @@ bool WebSocketRelayPeer::_is_server() const {
 void WebSocketRelayPeer::_poll() {
     m_socket->poll();
     WebSocketPeer::State state = m_socket->get_ready_state();
-    PackedByteArray data;
-    switch (state) {
-        case WebSocketPeer::State::STATE_OPEN:
-            data = m_socket->get_packet();
-            process_message(data);
-            return;
-        case WebSocketPeer::State::STATE_CLOSED:
-            UtilityFunctions::print("State closed");
-        case WebSocketPeer::State::STATE_CLOSING:
-            UtilityFunctions::print("State closing");
-        case WebSocketPeer::State::STATE_CONNECTING:
-        default:
-            return;
+    
+    if (state == WebSocketPeer::State::STATE_OPEN)
+    {
+        PackedByteArray data = m_socket->get_packet();
+        process_message(data);
+        return;
     }
+    else if (state == WebSocketPeer::State::STATE_CLOSED)
+        UtilityFunctions::print("State closed");
+    else if (state == WebSocketPeer::State::STATE_CLOSING)
+        UtilityFunctions::print("State closing");
+    else if (state == WebSocketPeer::State::STATE_CONNECTING)
+        UtilityFunctions::print("State connecting");
 }
 
-void WebSocketRelayPeer::process_message(PackedByteArray message) {
+void WebSocketRelayPeer::process_message(PackedByteArray& message) {
     /// Read the classifying byte
     if (message.is_empty()) {
         return;
@@ -171,9 +175,9 @@ void WebSocketRelayPeer::process_message(PackedByteArray message) {
 
     uint8_t classifyingByte = message[0];
     if (classifyingByte == RES_ID_RELAY_MSG) {
-        Packet packet;
+        Packet* packet = memnew(Packet);
         /// We need everything after the classifying byte
-        packet.m_data = message.slice(1);
+        packet->m_data = message.slice(1);
         m_incoming_packets.push(packet);
         return;
     }
