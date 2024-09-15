@@ -6,7 +6,7 @@
 using namespace godot;
 
 /// Our packet protocol
-class Packet : RefCounted {
+class Packet : public RefCounted {
 public:
     PackedByteArray m_data;
 };
